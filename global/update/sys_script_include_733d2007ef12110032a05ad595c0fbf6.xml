@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>global.PASearchAjax</api_name>
+        <caller_access/>
+        <claim/>
+        <client_callable>true</client_callable>
+        <description>AJAX methods for search in Performance Analytics.</description>
+        <name>PASearchAjax</name>
+        <script><![CDATA[var PASearchAjax = Class.create();
+PASearchAjax.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+    initialize: function(request, responseXML, gc) {
+        AbstractAjaxProcessor.prototype.initialize.call(this,request, responseXML, gc);
+    },
+
+    getSearchResults: function() {
+		var value = this.getParameter("sysparm_value");
+        var timer = this.getParameter("sysparm_timer");
+		var totalCount = 0;
+		
+        var tags = new GlideRecord("pa_tags");
+		tags.addEncodedQuery("labelLIKE" + value);
+		tags.orderBy("label");
+		tags.query();
+
+        var tagInfo = [];
+		var count = 0;
+
+        while (tags.next() && count < this.MAX_RESULTS) {
+			if (tags.canRead()) {
+				count++;
+            	tagInfo.push({"label": tags.getDisplayValue()+"",
+                          	"name": tags.sys_id+"",
+							  "type": "Tag"});
+			}
+        }
+		totalCount += count;
+		
+		var indicators = new GlideRecord("pa_indicators");
+		indicators.addQuery("display", true);
+		indicators.addEncodedQuery("nameLIKE" + value);
+		indicators.addNullQuery("benchmarking").addOrCondition("benchmarking", "equals", false);
+		indicators.orderBy("name");
+		indicators.query();
+		
+		var indicatorInfo = [];
+		count = 0;
+		
+        while (indicators.next() && count < this.MAX_RESULTS) {
+			if (indicators.canRead()) {
+				count++;
+            	indicatorInfo.push({"label": indicators.getDisplayValue()+"",
+                          	"name": indicators.sys_id+"",
+							  "type": "Name"});
+			}
+        }
+		totalCount += count;
+		
+		var result = {};
+		result.recordList = {};
+		result.recordList.Tag = tagInfo;
+		result.recordList.Name = indicatorInfo;
+		result.timer = timer;
+		result.rowCount = count;
+		return new global.JSON().encode(result);
+    },
+
+    type: 'PASearchAjax',
+	MAX_RESULTS: 5
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2014-01-20 12:16:30</sys_created_on>
+        <sys_id>733d2007ef12110032a05ad595c0fbf6</sys_id>
+        <sys_mod_count>30</sys_mod_count>
+        <sys_name>PASearchAjax</sys_name>
+        <sys_package display_value="ZBA2" source="ea1dea3b77470010ca3ab5b2681061a5">ea1dea3b77470010ca3ab5b2681061a5</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="ZBA2">ea1dea3b77470010ca3ab5b2681061a5</sys_scope>
+        <sys_update_name>sys_script_include_733d2007ef12110032a05ad595c0fbf6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-25 18:23:53</sys_updated_on>
+    </sys_script_include>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="ZBA2">ea1dea3b77470010ca3ab5b2681061a5</claim_owner_scope>
+        <claim_timestamp>1707d97525c0000001</claim_timestamp>
+        <metadata_update_name>sys_script_include_733d2007ef12110032a05ad595c0fbf6</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>ZBA2</previous_claim_name>
+        <previous_claim_scope>ea1dea3b77470010ca3ab5b2681061a5</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-02-25 18:23:53</sys_created_on>
+        <sys_id>aeede27b77470010ca3ab5b268106162</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-25 18:23:53</sys_updated_on>
+    </sys_claim>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="ZBA2">ea1dea3b77470010ca3ab5b2681061a5</claim_owner_scope>
+        <claim_timestamp>1707d94f6a10000001</claim_timestamp>
+        <metadata_update_name>sys_script_include_733d2007ef12110032a05ad595c0fbf6</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>ZBA1</previous_claim_name>
+        <previous_claim_scope>0a0daa3b77470010ca3ab5b2681061b9</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-02-25 18:23:53</sys_created_on>
+        <sys_id>26ede27b77470010ca3ab5b268106163</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-25 18:23:53</sys_updated_on>
+    </sys_claim>
+    <sys_claim action="INSERT_OR_UPDATE">
+        <claim_owner_scope display_value="ZBA2">ea1dea3b77470010ca3ab5b2681061a5</claim_owner_scope>
+        <claim_timestamp>1707d94f6640000001</claim_timestamp>
+        <metadata_update_name>sys_script_include_733d2007ef12110032a05ad595c0fbf6</metadata_update_name>
+        <previous_claim_app_version>1.0.0</previous_claim_app_version>
+        <previous_claim_name>com.snc.pa</previous_claim_name>
+        <previous_claim_scope>com.snc.pa</previous_claim_scope>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2020-02-25 18:23:53</sys_created_on>
+        <sys_id>62ede27b77470010ca3ab5b268106163</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2020-02-25 18:23:53</sys_updated_on>
+    </sys_claim>
+</record_update>
